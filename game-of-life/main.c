@@ -1,74 +1,92 @@
 #include "engine.h"
-
+    
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <SFML/Graphics.h>
+#include <SDL2/SDL.h>
 
-static void setPixel (sfRenderWindow *Window, int X, int Y, sfColor Color) {
-    sfVector2f Pos = {X, Y};
-    sfVector2f Size = {1.0, 1.0};
+typedef struct SDLWindow {
+    unsigned long long Size;
+    SDL_Window *Window;
+    SDL_Renderer *Renderer;
+} SDLWindow;
 
-    sfRectangleShape* Pix = sfRectangleShape_create ();
-    sfRectangleShape_setPosition (Pix, Pos);
-    sfRectangleShape_setFillColor (Pix, Color);
-    sfRectangleShape_setSize (Pix, Size);
+typedef struct Color {
+    unsigned char R;
+    unsigned char G;
+    unsigned char B;
+    unsigned char A;
+} Color;
 
-    sfRenderWindow_drawRectangleShape (Window, Pix, NULL);
+static SDLWindow Win;
 
-    sfRectangleShape_destroy(Pix);
+static int initWindow(const unsigned long long Size, const char *Name) {
+    if (!Name) {
+        fprintf(stderr, "Need to specify name of window\n");
+        return -1;
+    }
+
+    Win.Size = Size;
+    Win.Window = SDL_CreateWindow(Name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Size, Size, /* flags */ 0);
+    if (!Win.Window) {
+        fprintf(stderr, "Failed to create SDL window\n");    
+        return -1;
+    }
+
+    Win.Renderer = SDL_CreateRenderer(Win.Window, /* index */ -1, /* flags */ 0);
+    if (!Win.Renderer) {
+        fprintf(stderr, "Failed to create SDL renderer\n");    
+        return -1;
+    }
+
+    return 0;
 }
 
-
-static sfRenderWindow* initWindow(const unsigned long long Size, const char *Name) {
-    assert(Name);
-    sfVideoMode VideoMode = { Size, Size, 32 };
-
-    sfRenderWindow *Window = sfRenderWindow_create(VideoMode, Name, sfClose, NULL);
-    if (!Window)
-        exit(1);
+static bool isOpenWindow() {
+    SDL_Event Event;
+    while (SDL_PollEvent(&Event)) 
+        if (Event.type == SDL_WINDOWEVENT && Event.window.event == SDL_WINDOWEVENT_CLOSE)
+            return 0;
+    return 1;
 }
 
-static void drawGameSpace (sfRenderWindow *Window, const GameSpace *Space) {
-    sfColor cellColor = sfRed;
-    unsigned long long Size = Space->Size;
+static void setPixel(int X, int Y, Color Color) {
+    SDL_SetRenderDrawColor(Win.Renderer, Color.R, Color.G, Color.B, Color.A);
+    SDL_RenderDrawPoint(Win.Renderer, X, Y);
+}
 
-    for (int I = 0; I < Size; I++)
-        for (int J = 0; J < Size; J++)
-            if (Space->Cells[I * Size + J] == 1)
-                setPixel(Window, I, J, cellColor);
+static void destroyWindow() {
+    SDL_DestroyRenderer(Win.Renderer);
+    SDL_DestroyWindow(Win.Window);
+    SDL_Quit();
+}
+
+static void drawGameSpace (const cell_t *Cells) {
+    Color cellColor = {255, 0, 0, 255};
+
+    for (int I = 0; I < WINDOW_SIZE; I++)
+        for (int J = 0; J < WINDOW_SIZE; J++)
+            if (Cells[I * WINDOW_SIZE + J] == 1)
+                setPixel(I, J, cellColor);
 }
 
 int main (int argc, char **argv) {
-    const size_t WindowSize = 800;
+    cell_t Cells[WINDOW_SIZE * WINDOW_SIZE];
+    initGameSpace(Cells); 
 
-    sfRenderWindow *Window = initWindow (WindowSize, "Game of Life"); 
+    if (initWindow(WINDOW_SIZE, "Game of Life"))
+        return -1; 
 
-    GameSpace Space;
-    int err = initGameSpace(&Space, WindowSize, 1); 
-    if (err)
-        exit(1);
-
-    while (sfRenderWindow_isOpen(Window))
-    {
-        sfEvent event;
-        while (sfRenderWindow_pollEvent(Window, &event))
-            if (event.type == sfEvtClosed)
-                sfRenderWindow_close(Window);
-
-        sfRenderWindow_clear (Window, sfBlack);
-
-        if (newTurn(&Space) == 0) {
-            sfRenderWindow_close(Window);
-        }
-
-        drawGameSpace (Window, &Space);
-        sfRenderWindow_display (Window);
+    while(isOpenWindow()) {
+        SDL_SetRenderDrawColor(Win.Renderer, 0, 0, 0, 255);
+        SDL_RenderClear(Win.Renderer);
+        if (newTurn(Cells) == 0)
+            break;
+        drawGameSpace(Cells);
+        SDL_RenderPresent(Win.Renderer);
     }
 
-    destroyGameSpace (&Space);
-    sfRenderWindow_destroy (Window);
-
+    destroyWindow();
     return 0;
 }
