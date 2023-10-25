@@ -74,7 +74,6 @@ static void drawGameSpace (const cell_t *Cells) {
 int main (int argc, char **argv) {
     cell_t Cells[WINDOW_SIZE * WINDOW_SIZE];
     initGameSpace(Cells); 
-
     if (initWindow(WINDOW_SIZE, "Game of Life"))
         return -1; 
 
