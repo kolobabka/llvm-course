@@ -45,6 +45,9 @@ struct MyPass : public FunctionPass {
           if (callee && isFuncLogger(callee->getName()))
             continue;
         }
+
+        if (auto *phi = dyn_cast<PHINode>(&I)) 
+          continue;
         builder.SetInsertPoint(&I);
         
         if (F.getName() == "main" && dyn_cast<ReturnInst>(&I)) {
@@ -77,5 +80,5 @@ static void registerMyPass(const PassManagerBuilder &,
   PM.add(new MyPass());
 }
 static RegisterStandardPasses
-    RegisterMyPass(PassManagerBuilder::EP_EarlyAsPossible,
+    RegisterMyPass(PassManagerBuilder::EP_OptimizerLast,
                    registerMyPass);
