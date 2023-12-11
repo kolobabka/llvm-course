@@ -1,239 +1,248 @@
 # How to build
 
 ```
-clang++ ./Pass.cpp -c -fPIC -I`llvm-config --includedir` -o Pass.o
+clang++ -O2 ./Pass.cpp -c -fPIC -I`llvm-config --includedir` -o Pass.o
 clang++ Pass.o -fPIC -shared -o libPass.so
-clang++ log.cpp -fPIC -c -o log.o
-clang -Xclang -load -Xclang ./libPass.so main.c engine/engine.c log.o -O2 -lSDL2 -lstdc++ -flegacy-pass-manager -o GameOfLife
+clang++ -O2 log.cpp -fPIC -c -o log.o
+clang -Xclang -load -Xclang ./libPass.so engine/app.c engine/sim.c log.o -O2 -lSDL2 -lstdc++ -flegacy-pass-manager -o GameOfLife
 ```
 
 you would get an executable 'GameOfLife' file
 
 # Statistic 
 ```
-  %3 = alloca %union.SDL_Event, align 8 --- 1
-  %13 = load i8, i8* %12, align 4 --- 1
-  %2 = tail call i64 @time(i64* noundef null) #6 --- 1
-  %3 = call i32 @initWindow(i64 noundef 800, i8* noundef getelementptr inbounds ([13 x i8], [13 x i8]* @.str, i64 0, i64 0)) #3 --- 1
-  %4 = icmp eq i32 %3, 0 --- 1
-  %18 = call i32 @SDL_SetRenderDrawColor(%struct.SDL_Renderer* noundef %17, i8 noundef zeroext 0, i8 noundef zeroext 0, i8 noundef zeroext 0, i8 noundef zeroext -1) #6 --- 1
-  %4 = bitcast %union.SDL_Event* %3 to i8* --- 1
-  tail call void @srand(i32 noundef %3) #6 --- 1
-  %14 = icmp eq i8 %13, 14 --- 1
-  call void @llvm.lifetime.start.p0i8(i64 56, i8* nonnull %4) #6 --- 1
-  %10 = icmp eq %struct.SDL_Window* %9, null --- 1
-  br i1 %4, label %5, label %7 --- 1
-  %2 = alloca [640000 x i8], align 16 --- 1
-  store %struct.SDL_Renderer* %15, %struct.SDL_Renderer** getelementptr inbounds (%struct.SDLWindow, %struct.SDLWindow* @Win, i64 0, i32 2), align 8, !tbaa !13 --- 1
-  %15 = tail call %struct.SDL_Renderer* @SDL_CreateRenderer(%struct.SDL_Window* noundef nonnull %9, i32 noundef -1, i32 noundef 0) #7 --- 1
-  %5 = call i32 @SDL_PollEvent(%union.SDL_Event* noundef nonnull %3) #6 --- 1
-  %6 = icmp ne i32 %5, 0 --- 1
-  %9 = tail call %struct.SDL_Window* @SDL_CreateWindow(i8* noundef nonnull %1, i32 noundef 805240832, i32 noundef 805240832, i32 noundef %8, i32 noundef %8, i32 noundef 0) #7 --- 1
-  br label %188 --- 1
-  %10 = select i1 %6, i1 %9, i1 false --- 1
-  %19 = load %struct.SDL_Renderer*, %struct.SDL_Renderer** getelementptr inbounds (%struct.SDLWindow, %struct.SDLWindow* @Win, i64 0, i32 2), align 8, !tbaa !5 --- 1
-  call void @llvm.lifetime.end.p0i8(i64 640000, i8* nonnull %21) #6 --- 1
-  %8 = load i32, i32* %7, align 8 --- 1
-  %9 = icmp eq i32 %8, 512 --- 1
-  %11 = getelementptr inbounds %union.SDL_Event, %union.SDL_Event* %3, i64 0, i32 0, i32 3 --- 1
-  %12 = bitcast [6 x float]* %11 to i8* --- 1
-  tail call void @SDL_DestroyWindow(%struct.SDL_Window* noundef %2) #6 --- 1
-  %15 = select i1 %10, i1 %14, i1 false --- 1
-  %21 = getelementptr inbounds [640000 x i8], [640000 x i8]* %2, i64 0, i64 0 --- 1
-  br label %4 --- 1
-  call void @llvm.lifetime.start.p0i8(i64 640000, i8* nonnull %21) #6 --- 1
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* noundef nonnull align 1 dereferenceable(640000) %0, i8* noundef nonnull align 16 dereferenceable(640000) %21, i64 640000, i1 false) #6 --- 1
-  ret i32 %21 --- 1
-  %7 = getelementptr inbounds %union.SDL_Event, %union.SDL_Event* %3, i64 0, i32 0, i32 0 --- 1
-  call void @SDL_RenderPresent(%struct.SDL_Renderer* noundef %187) #6 --- 1
-  call void (...) @destroyWindow() #3 --- 1
-  store %struct.SDL_Window* %9, %struct.SDL_Window** getelementptr inbounds (%struct.SDLWindow, %struct.SDLWindow* @Win, i64 0, i32 1), align 8, !tbaa !12 --- 1
-  %2 = load %struct.SDL_Window*, %struct.SDL_Window** getelementptr inbounds (%struct.SDLWindow, %struct.SDLWindow* @Win, i64 0, i32 1), align 8, !tbaa !11 --- 1
-  store i64 %0, i64* getelementptr inbounds (%struct.SDLWindow, %struct.SDLWindow* @Win, i64 0, i32 0), align 8, !tbaa !9 --- 1
-  %8 = trunc i64 %0 to i32 --- 1
-  br label %164 --- 1
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* noundef nonnull align 16 dereferenceable(640000) %21, i8* noundef nonnull align 1 dereferenceable(640000) %0, i64 640000, i1 false) #6 --- 1
-  br label %7 --- 1
-  %20 = call i32 @SDL_RenderClear(%struct.SDL_Renderer* noundef %19) #6 --- 1
-  %3 = icmp eq i8* %1, null --- 1
-  br i1 %16, label %17, label %20 --- 1
-  %6 = call zeroext i1 @isOpenWindow(i8* noundef nonnull %2) #3 --- 1
-  br i1 %3, label %4, label %7 --- 1
-  ret i1 %189 --- 1
-  br i1 %10, label %11, label %14 --- 1
-  %1 = alloca [640000 x i8], align 16 --- 1
-  %16 = icmp eq %struct.SDL_Renderer* %15, null --- 1
-  call void @llvm.lifetime.start.p0i8(i64 640000, i8* nonnull %2) #3 --- 1
-  call void @initGameSpace(i8* noundef nonnull %2) #3 --- 1
+%8 = icmp eq i32 %7, 512 --- 1
   %2 = getelementptr inbounds [640000 x i8], [640000 x i8]* %1, i64 0, i64 0 --- 1
-  %3 = trunc i64 %2 to i32 --- 1
-  br i1 %15, label %188, label %16 --- 1
-  call void @llvm.lifetime.end.p0i8(i64 640000, i8* nonnull %2) #3 --- 1
-  tail call void @SDL_Quit() #6 --- 1
-  tail call void @SDL_DestroyRenderer(%struct.SDL_Renderer* noundef %1) #6 --- 1
-  %1 = load %struct.SDL_Renderer*, %struct.SDL_Renderer** getelementptr inbounds (%struct.SDLWindow, %struct.SDLWindow* @Win, i64 0, i32 2), align 8, !tbaa !5 --- 1
-  call void @llvm.lifetime.end.p0i8(i64 56, i8* nonnull %4) #6 --- 1
-  %187 = load %struct.SDL_Renderer*, %struct.SDL_Renderer** getelementptr inbounds (%struct.SDLWindow, %struct.SDLWindow* @Win, i64 0, i32 2), align 8, !tbaa !5 --- 1
-  br i1 %79, label %80, label %163 --- 1
-  %79 = icmp eq i32 %160, 640000 --- 1
+  %16 = load %struct.SDL_Renderer*, %struct.SDL_Renderer** @Win.2, align 8, !tbaa !5 --- 1
+  %2 = alloca [640000 x i8], align 16 --- 1
+  %7 = load i32, i32* %6, align 8 --- 1
+  ret i32 %38 --- 1
+  %4 = icmp eq i32 %3, 0 --- 1
+  store %struct.SDL_Window* %8, %struct.SDL_Window** @Win.1, align 8, !tbaa !9 --- 1
+  call void @SDL_RenderPresent(%struct.SDL_Renderer* noundef %23) #5 --- 1
+  br i1 %3, label %4, label %7 --- 1
+  %5 = icmp ne i32 %4, 0 --- 1
+  %14 = select i1 %9, i1 %13, i1 false --- 1
+  %3 = bitcast %union.SDL_Event* %2 to i8* --- 1
+  %61 = icmp eq i32 %143, 640000 --- 1
+  %12 = load i8, i8* %11, align 4 --- 1
+  %17 = call i32 @SDL_SetRenderDrawColor(%struct.SDL_Renderer* noundef %16, i8 noundef zeroext 0, i8 noundef zeroext 0, i8 noundef zeroext 0, i8 noundef zeroext -1) #5 --- 1
+  br i1 %61, label %165, label %146 --- 1
+  br i1 %4, label %5, label %9 --- 1
+  %9 = select i1 %5, i1 %8, i1 false --- 1
+  %8 = load %struct.SDL_Window*, %struct.SDL_Window** @Win.1, align 8, !tbaa !11 --- 1
+  br i1 %21, label %24, label %22 --- 1
+  %11 = bitcast [6 x float]* %10 to i8* --- 1
+  %3 = getelementptr inbounds [640000 x i8], [640000 x i8]* %2, i64 0, i64 0 --- 1
+  br i1 %14, label %24, label %15 --- 1
+  %19 = call i32 @SDL_RenderClear(%struct.SDL_Renderer* noundef %18) #5 --- 1
+  %18 = load %struct.SDL_Renderer*, %struct.SDL_Renderer** @Win.2, align 8, !tbaa !5 --- 1
+  ret i32 %166 --- 1
+  %20 = call i32 @app(i8* noundef %0) #5 --- 1
+  call void @llvm.lifetime.end.p0i8(i64 640000, i8* nonnull %2) #5 --- 1
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* noundef nonnull align 16 dereferenceable(640000) %3, i8* noundef nonnull align 1 dereferenceable(640000) %0, i64 640000, i1 false) --- 1
+  call void @llvm.lifetime.start.p0i8(i64 640000, i8* nonnull %3) #4 --- 1
+  %9 = icmp eq %struct.SDL_Window* %8, null --- 1
+  %2 = alloca %union.SDL_Event, align 8 --- 1
+  br label %24 --- 1
+  %6 = call zeroext i1 @isOpenWindow(i8* noundef nonnull %2) --- 1
+  %6 = getelementptr inbounds %union.SDL_Event, %union.SDL_Event* %2, i64 0, i32 0, i32 0 --- 1
+  call void @SDL_DestroyRenderer(%struct.SDL_Renderer* noundef %7) #5 --- 1
+  br label %4 --- 1
+  store %struct.SDL_Renderer* %14, %struct.SDL_Renderer** @Win.2, align 8, !tbaa !12 --- 1
+  br i1 %9, label %10, label %13 --- 1
+  %4 = call i32 @SDL_PollEvent(%union.SDL_Event* noundef nonnull %2) #5 --- 1
+  %1 = alloca [640000 x i8], align 16 --- 1
   br label %22 --- 1
-  %17 = load %struct.SDL_Renderer*, %struct.SDL_Renderer** getelementptr inbounds (%struct.SDLWindow, %struct.SDLWindow* @Win, i64 0, i32 2), align 8, !tbaa !5 --- 1
-  ret void --- 2
-  store i8 1, i8* %63, align 16, !tbaa !11 --- 125
-  store i8 0, i8* %63, align 16, !tbaa !11 --- 153
-  %76 = add nsw i32 %24, 1 --- 522
-  %74 = select i1 %65, i1 %73, i1 false --- 647
-  %73 = icmp eq i32 %62, 3 --- 647
-  br i1 %74, label %77, label %75 --- 647
-  %37 = add nuw nsw i8 %36, %32 --- 799
-  %43 = getelementptr inbounds i8, i8* %0, i64 %42 --- 799
-  %44 = load i8, i8* %43, align 1, !tbaa !11, !range !13 --- 799
-  br label %54 --- 799
-  %57 = getelementptr inbounds i8, i8* %0, i64 %29 --- 799
-  br label %61 --- 799
-  %51 = load i8, i8* %50, align 1, !tbaa !11, !range !13 --- 799
-  %36 = load i8, i8* %35, align 1, !tbaa !11, !range !13 --- 799
-  %53 = add nuw nsw i32 %48, %52 --- 799
-  %50 = getelementptr inbounds i8, i8* %0, i64 %28 --- 799
-  %34 = add nuw nsw i64 %27, 801 --- 799
-  %58 = load i8, i8* %57, align 1, !tbaa !11, !range !13 --- 799
-  %59 = zext i8 %58 to i32 --- 799
-  %60 = add nuw nsw i32 %55, %59 --- 799
-  br label %38 --- 799
-  %52 = zext i8 %51 to i32 --- 799
-  %45 = zext i8 %44 to i32 --- 799
-  %35 = getelementptr inbounds i8, i8* %0, i64 %34 --- 799
-  %42 = add nsw i64 %27, -799 --- 799
-  %46 = add nuw nsw i32 %45, %40 --- 799
-  br label %47 --- 799
-  %31 = getelementptr inbounds i8, i8* %0, i64 %30 --- 800
-  %65 = icmp eq i8 %64, 0 --- 800
-  %63 = getelementptr inbounds [640000 x i8], [640000 x i8]* %2, i64 0, i64 %27 --- 800
-  %66 = and i32 %62, -2 --- 800
-  br label %11 --- 800
-  %166 = mul nuw nsw i64 %165, 800 --- 800
-  %9 = add nuw nsw i64 %5, 1 --- 800
-  br i1 %26, label %47, label %41 --- 800
-  %10 = icmp eq i64 %9, 800 --- 800
-  %40 = zext i8 %39 to i32 --- 800
-  %32 = load i8, i8* %31, align 1, !tbaa !11, !range !13 --- 800
-  %29 = add nsw i64 %27, -800 --- 800
-  %28 = add nuw nsw i64 %27, 800 --- 800
-  %25 = icmp eq i64 %23, 0 --- 800
-  %27 = mul nuw nsw i64 %23, 800 --- 800
-  %26 = icmp eq i64 %23, 799 --- 800
-  br i1 %25, label %38, label %33 --- 800
-  br i1 %83, label %78, label %22, !llvm.loop !14 --- 800
-  br label %171 --- 800
-  %167 = trunc i64 %165 to i32 --- 800
-  %82 = add nuw nsw i64 %23, 1 --- 800
-  %83 = icmp eq i64 %82, 800 --- 800
-  %64 = load i8, i8* %63, align 16, !tbaa !11, !range !13 --- 800
-  %6 = mul nuw nsw i64 %5, 800 --- 800
-  br i1 %10, label %7, label %4, !llvm.loop !5 --- 800
-  %68 = select i1 %65, i1 true, i1 %67 --- 800
-  br label %70 --- 800
-  br i1 %170, label %186, label %164, !llvm.loop !18 --- 800
-  %30 = or i64 %27, 1 --- 800
-  br i1 %68, label %72, label %69 --- 800
-  br i1 %26, label %61, label %56 --- 800
-  br i1 %25, label %54, label %49 --- 800
-  %170 = icmp eq i64 %169, 800 --- 800
-  %67 = icmp eq i32 %66, 2 --- 800
-  br label %84 --- 800
-  %169 = add nuw nsw i64 %165, 1 --- 800
-  store i8 1, i8* %146, align 1, !tbaa !11 --- 70402
-  %181 = trunc i64 %172 to i32 --- 176483
-  %182 = call i32 @SDL_RenderDrawPoint(%struct.SDL_Renderer* noundef %180, i32 noundef %167, i32 noundef %181) #6 --- 176483
-  %180 = load %struct.SDL_Renderer*, %struct.SDL_Renderer** getelementptr inbounds (%struct.SDLWindow, %struct.SDLWindow* @Win, i64 0, i32 2), align 8, !tbaa !5 --- 176483
-  %179 = call i32 @SDL_SetRenderDrawColor(%struct.SDL_Renderer* noundef %178, i8 noundef zeroext -1, i8 noundef zeroext 0, i8 noundef zeroext 0, i8 noundef zeroext -1) #6 --- 176483
-  %178 = load %struct.SDL_Renderer*, %struct.SDL_Renderer** getelementptr inbounds (%struct.SDLWindow, %struct.SDLWindow* @Win, i64 0, i32 2), align 8, !tbaa !5 --- 176483
-  br label %183 --- 176483
-  store i8 0, i8* %146, align 1, !tbaa !11 --- 212980
-  %158 = add nsw i32 %86, 1 --- 355818
-  %155 = select i1 %148, i1 %154, i1 false --- 426220
-  %154 = icmp eq i32 %145, 3 --- 426220
-  br i1 %155, label %156, label %157 --- 426220
-  %118 = zext i8 %117 to i32 --- 637602
-  %126 = zext i8 %125 to i32 --- 637602
-  %125 = load i8, i8* %124, align 1, !tbaa !11, !range !13 --- 637602
-  %117 = load i8, i8* %116, align 1, !tbaa !11, !range !13 --- 637602
-  %124 = getelementptr inbounds i8, i8* %0, i64 %123 --- 637602
-  %115 = add nuw nsw i64 %88, 801 --- 637602
-  %127 = add nuw nsw i32 %121, %126 --- 637602
-  br label %120 --- 637602
-  %119 = add nuw nsw i32 %113, %118 --- 637602
-  %116 = getelementptr inbounds i8, i8* %0, i64 %115 --- 637602
-  br label %128 --- 637602
-  %123 = add nsw i64 %88, -799 --- 637602
-  br i1 %26, label %128, label %122 --- 638400
-  %111 = load i8, i8* %110, align 1, !tbaa !11, !range !13 --- 638400
-  %109 = add nuw nsw i64 %88, 1 --- 638400
-  br i1 %25, label %120, label %114 --- 638400
-  %112 = zext i8 %111 to i32 --- 638400
-  %110 = getelementptr inbounds i8, i8* %0, i64 %109 --- 638400
-  %113 = add nuw nsw i32 %107, %112 --- 638400
-  %140 = getelementptr inbounds i8, i8* %0, i64 %139 --- 638401
-  %103 = load i8, i8* %102, align 1, !tbaa !11, !range !13 --- 638401
-  %143 = add nuw nsw i32 %137, %142 --- 638401
-  br label %144 --- 638401
-  %96 = add nuw nsw i8 %95, %91 --- 638401
-  br label %106 --- 638401
-  %105 = add nuw nsw i32 %104, %99 --- 638401
-  %104 = zext i8 %103 to i32 --- 638401
-  %139 = add nsw i64 %85, %29 --- 638401
-  %93 = add nuw nsw i64 %88, 799 --- 638401
-  %102 = getelementptr inbounds i8, i8* %0, i64 %101 --- 638401
-  %132 = getelementptr inbounds i8, i8* %0, i64 %131 --- 638401
-  %134 = zext i8 %133 to i32 --- 638401
-  %131 = add nuw nsw i64 %85, %28 --- 638401
-  br label %136 --- 638401
-  %135 = add nuw nsw i32 %129, %134 --- 638401
-  %141 = load i8, i8* %140, align 1, !tbaa !11, !range !13 --- 638401
-  %133 = load i8, i8* %132, align 1, !tbaa !11, !range !13 --- 638401
-  br label %97 --- 638401
-  %101 = add nsw i64 %88, -801 --- 638401
-  %95 = load i8, i8* %94, align 1, !tbaa !11, !range !13 --- 638401
-  %94 = getelementptr inbounds i8, i8* %0, i64 %93 --- 638401
-  %142 = zext i8 %141 to i32 --- 638401
-  br i1 %87, label %128, label %108 --- 639200
-  %162 = icmp eq i64 %161, 800 --- 639200
-  %87 = icmp eq i64 %85, 799 --- 639200
-  %88 = add nuw nsw i64 %85, %27 --- 639200
-  %148 = icmp eq i8 %147, 0 --- 639200
-  br label %159 --- 639200
-  br i1 %162, label %81, label %84, !llvm.loop !16 --- 639200
-  br i1 %26, label %106, label %100 --- 639200
-  %91 = load i8, i8* %90, align 1, !tbaa !11, !range !13 --- 639200
-  %89 = add nsw i64 %88, -1 --- 639200
-  br i1 %26, label %144, label %138 --- 639200
-  br i1 %25, label %97, label %92 --- 639200
-  %161 = add nuw nsw i64 %85, 1 --- 639200
-  %99 = zext i8 %98 to i32 --- 639200
-  %149 = and i32 %145, -2 --- 639200
-  %151 = select i1 %148, i1 true, i1 %150 --- 639200
-  %150 = icmp eq i32 %149, 2 --- 639200
-  %147 = load i8, i8* %146, align 1, !tbaa !11, !range !13 --- 639200
-  %90 = getelementptr inbounds i8, i8* %0, i64 %89 --- 639200
-  br i1 %151, label %153, label %152 --- 639200
-  %146 = getelementptr inbounds [640000 x i8], [640000 x i8]* %2, i64 0, i64 %88 --- 639200
-  br i1 %25, label %136, label %130 --- 639200
-  br i1 %19, label %8, label %11, !llvm.loop !11 --- 640000
-  %15 = getelementptr inbounds i8, i8* %0, i64 %14 --- 640000
-  %16 = trunc i32 %13 to i8 --- 640000
-  %176 = icmp eq i8 %175, 0 --- 640000
-  %19 = icmp eq i64 %18, 800 --- 640000
-  %174 = getelementptr inbounds i8, i8* %0, i64 %173 --- 640000
-  %14 = add nuw nsw i64 %12, %6 --- 640000
-  %184 = add nuw nsw i64 %172, 1 --- 640000
-  store i8 %17, i8* %15, align 1, !tbaa !7 --- 640000
-  br i1 %185, label %168, label %171, !llvm.loop !19 --- 640000
-  %18 = add nuw nsw i64 %12, 1 --- 640000
-  %173 = add nuw nsw i64 %172, %166 --- 640000
-  %185 = icmp eq i64 %184, 800 --- 640000
-  %17 = and i8 %16, 1 --- 640000
-  %175 = load i8, i8* %174, align 1, !tbaa !11, !range !13 --- 640000
-  br i1 %176, label %183, label %177 --- 640000
-  %13 = tail call i32 @rand() #6 --- 640000
-
+  call void @llvm.lifetime.start.p0i8(i64 56, i8* nonnull %3) #5 --- 1
+  call void @SDL_DestroyWindow(%struct.SDL_Window* noundef %8) #5 --- 1
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* noundef nonnull align 1 dereferenceable(640000) %0, i8* noundef nonnull align 16 dereferenceable(640000) %3, i64 640000, i1 false) --- 1
+  tail call void @srand(i32 noundef %21) #6 --- 1
+  %14 = tail call %struct.SDL_Renderer* @SDL_CreateRenderer(%struct.SDL_Window* noundef nonnull %8, i32 noundef -1, i32 noundef 0) #6 --- 1
+  %21 = trunc i64 %20 to i32 --- 1
+  br i1 %15, label %16, label %19 --- 1
+  call void @llvm.lifetime.start.p0i8(i64 640000, i8* nonnull %2) #5 --- 1
+  %20 = tail call i64 @time(i64* noundef null) #6 --- 1
+  %10 = getelementptr inbounds %union.SDL_Event, %union.SDL_Event* %2, i64 0, i32 0, i32 3 --- 1
+  %8 = tail call %struct.SDL_Window* @SDL_CreateWindow(i8* noundef nonnull %0, i32 noundef 805240832, i32 noundef 805240832, i32 noundef 800, i32 noundef 800, i32 noundef 0) #6 --- 1
+  %3 = call i32 @simInit(i8* noundef getelementptr inbounds ([13 x i8], [13 x i8]* @.str.3, i64 0, i64 0), i8* noundef nonnull %2) --- 1
+  %3 = icmp eq i8* %0, null --- 1
+  %13 = icmp eq i8 %12, 14 --- 1
+  %15 = icmp eq %struct.SDL_Renderer* %14, null --- 1
+  call void @llvm.lifetime.end.p0i8(i64 56, i8* nonnull %3) #5 --- 1
+  %21 = icmp eq i32 %20, 0 --- 1
+  %7 = load %struct.SDL_Renderer*, %struct.SDL_Renderer** @Win.2, align 8, !tbaa !5 --- 1
+  call void @SDL_Quit() #5 --- 1
+  %23 = load %struct.SDL_Renderer*, %struct.SDL_Renderer** @Win.2, align 8, !tbaa !5 --- 1
+  br label %147 --- 1
+  call void @llvm.lifetime.end.p0i8(i64 640000, i8* nonnull %3) #4 --- 1
+  br label %9 --- 1
+  ret i1 %25 --- 1
+  store i8 1, i8* %45, align 16, !tbaa !5 --- 102
+  store i8 0, i8* %45, align 16, !tbaa !5 --- 155
+  %56 = add nsw i32 %6, 1 --- 543
+  %53 = icmp eq i32 %44, 3 --- 645
+  br i1 %54, label %57, label %55 --- 645
+  %54 = select i1 %47, i1 %53, i1 false --- 645
+  br label %43 --- 799
+  br label %29 --- 799
+  %27 = zext i8 %26 to i32 --- 799
+  %42 = add nuw nsw i32 %37, %41 --- 799
+  %32 = getelementptr inbounds i8, i8* %0, i64 %10 --- 799
+  %24 = add nsw i64 %9, -799 --- 799
+  %39 = getelementptr inbounds i8, i8* %0, i64 %11 --- 799
+  %16 = add nuw nsw i64 %9, 801 --- 799
+  %28 = add nuw nsw i32 %22, %27 --- 799
+  %17 = getelementptr inbounds i8, i8* %0, i64 %16 --- 799
+  %18 = load i8, i8* %17, align 1, !tbaa !5, !range !9 --- 799
+  %41 = zext i8 %40 to i32 --- 799
+  %33 = load i8, i8* %32, align 1, !tbaa !5, !range !9 --- 799
+  br label %36 --- 799
+  %35 = add nuw nsw i32 %30, %34 --- 799
+  %25 = getelementptr inbounds i8, i8* %0, i64 %24 --- 799
+  br label %20 --- 799
+  %34 = zext i8 %33 to i32 --- 799
+  %40 = load i8, i8* %39, align 1, !tbaa !5, !range !9 --- 799
+  %19 = add nuw nsw i8 %14, %18 --- 799
+  %26 = load i8, i8* %25, align 1, !tbaa !5, !range !9 --- 799
+  br i1 %7, label %36, label %31 --- 800
+  br i1 %8, label %43, label %38 --- 800
+  %27 = icmp eq i64 %26, 800 --- 800
+  %14 = load i8, i8* %13, align 1, !tbaa !5, !range !9 --- 800
+  %153 = icmp eq i64 %152, 800 --- 800
+  %13 = getelementptr inbounds i8, i8* %0, i64 %12 --- 800
+  %48 = and i32 %44, -2 --- 800
+  br i1 %8, label %29, label %23 --- 800
+  %12 = or i64 %9, 1 --- 800
+  %10 = add nuw nsw i64 %9, 800 --- 800
+  %9 = mul nuw nsw i64 %5, 800 --- 800
+  %152 = add nuw nsw i64 %148, 1 --- 800
+  %8 = icmp eq i64 %5, 799 --- 800
+  %7 = icmp eq i64 %5, 0 --- 800
+  %149 = mul nuw nsw i64 %148, 800 --- 800
+  %26 = add nuw nsw i64 %23, 1 --- 800
+  %11 = add nsw i64 %9, -800 --- 800
+  br label %58 --- 800
+  %50 = select i1 %47, i1 true, i1 %49 --- 800
+  %22 = zext i8 %21 to i32 --- 800
+  %24 = mul nuw nsw i64 %23, 800 --- 800
+  %150 = trunc i64 %148 to i32 --- 800
+  br label %154 --- 800
+  %47 = icmp eq i8 %46, 0 --- 800
+  %45 = getelementptr inbounds [640000 x i8], [640000 x i8]* %2, i64 0, i64 %9 --- 800
+  %64 = icmp eq i64 %63, 800 --- 800
+  br i1 %27, label %37, label %22, !llvm.loop !13 --- 800
+  br i1 %64, label %60, label %4, !llvm.loop !10 --- 800
+  %49 = icmp eq i32 %48, 2 --- 800
+  %46 = load i8, i8* %45, align 16, !tbaa !5, !range !9 --- 800
+  br i1 %7, label %20, label %15 --- 800
+  br label %28 --- 800
+  br label %65 --- 800
+  br i1 %153, label %165, label %147, !llvm.loop !14 --- 800
+  br i1 %50, label %52, label %51 --- 800
+  %63 = add nuw nsw i64 %5, 1 --- 800
+  store i8 1, i8* %129, align 1, !tbaa !5 --- 69601
+  %7 = lshr i32 %2, 16 --- 174470
+  %10 = trunc i32 %9 to i8 --- 174470
+  br label %162 --- 174470
+  %13 = load %struct.SDL_Renderer*, %struct.SDL_Renderer** @Win.2, align 8, !tbaa !5 --- 174470
+  %161 = trunc i64 %155 to i32 --- 174470
+  tail call void @setPixel(i32 noundef %150, i32 noundef %161, i32 -16776961) #4 --- 174470
+  %12 = tail call i32 @SDL_SetRenderDrawColor(%struct.SDL_Renderer* noundef %11, i8 noundef zeroext %4, i8 noundef zeroext %6, i8 noundef zeroext %8, i8 noundef zeroext %10) #5 --- 174470
+  %4 = trunc i32 %2 to i8 --- 174470
+  %5 = lshr i32 %2, 8 --- 174470
+  %14 = tail call i32 @SDL_RenderDrawPoint(%struct.SDL_Renderer* noundef %13, i32 noundef %0, i32 noundef %1) #5 --- 174470
+  %8 = trunc i32 %7 to i8 --- 174470
+  %6 = trunc i32 %5 to i8 --- 174470
+  %11 = load %struct.SDL_Renderer*, %struct.SDL_Renderer** @Win.2, align 8, !tbaa !5 --- 174470
+  %9 = lshr i32 %2, 24 --- 174470
+  ret void --- 174470
+  store i8 0, i8* %129, align 1, !tbaa !5 --- 215343
+  %141 = add nsw i32 %67, 1 --- 354256
+  %138 = select i1 %131, i1 %137, i1 false --- 423857
+  %137 = icmp eq i32 %127, 3 --- 423857
+  br i1 %138, label %139, label %140 --- 423857
+  %105 = add nsw i64 %90, -799 --- 637602
+  %109 = add nuw nsw i32 %103, %108 --- 637602
+  %99 = load i8, i8* %98, align 1, !tbaa !5, !range !9 --- 637602
+  %106 = getelementptr inbounds i8, i8* %0, i64 %105 --- 637602
+  %108 = zext i8 %107 to i32 --- 637602
+  %97 = add nuw nsw i64 %90, 801 --- 637602
+  %98 = getelementptr inbounds i8, i8* %0, i64 %97 --- 637602
+  %100 = zext i8 %99 to i32 --- 637602
+  br label %110 --- 637602
+  %107 = load i8, i8* %106, align 1, !tbaa !5, !range !9 --- 637602
+  %101 = add nuw nsw i32 %95, %100 --- 637602
+  br label %102 --- 637602
+  %95 = add nuw nsw i32 %88, %94 --- 638400
+  br i1 %7, label %102, label %96 --- 638400
+  %93 = load i8, i8* %92, align 1, !tbaa !5, !range !9 --- 638400
+  %90 = add nuw nsw i64 %66, %9 --- 638400
+  %91 = add nuw nsw i64 %90, 1 --- 638400
+  %94 = zext i8 %93 to i32 --- 638400
+  br i1 %8, label %110, label %104 --- 638400
+  %92 = getelementptr inbounds i8, i8* %0, i64 %91 --- 638400
+  %85 = zext i8 %84 to i32 --- 638401
+  %82 = add nsw i64 %69, -801 --- 638401
+  %123 = load i8, i8* %122, align 1, !tbaa !5, !range !9 --- 638401
+  %83 = getelementptr inbounds i8, i8* %0, i64 %82 --- 638401
+  %122 = getelementptr inbounds i8, i8* %0, i64 %121 --- 638401
+  %124 = zext i8 %123 to i32 --- 638401
+  %125 = add nuw nsw i32 %119, %124 --- 638401
+  br label %126 --- 638401
+  %77 = add nuw nsw i8 %76, %72 --- 638401
+  %113 = add nuw nsw i64 %10, %66 --- 638401
+  %84 = load i8, i8* %83, align 1, !tbaa !5, !range !9 --- 638401
+  %114 = getelementptr inbounds i8, i8* %0, i64 %113 --- 638401
+  %117 = add nuw nsw i32 %111, %116 --- 638401
+  %74 = add nuw nsw i64 %69, 799 --- 638401
+  %75 = getelementptr inbounds i8, i8* %0, i64 %74 --- 638401
+  %121 = add nsw i64 %11, %66 --- 638401
+  br label %118 --- 638401
+  br label %87 --- 638401
+  %115 = load i8, i8* %114, align 1, !tbaa !5, !range !9 --- 638401
+  %86 = add nuw nsw i32 %85, %80 --- 638401
+  %116 = zext i8 %115 to i32 --- 638401
+  br label %78 --- 638401
+  %76 = load i8, i8* %75, align 1, !tbaa !5, !range !9 --- 638401
+  %132 = and i32 %127, -2 --- 639200
+  br label %142 --- 639200
+  %80 = zext i8 %79 to i32 --- 639200
+  br i1 %68, label %110, label %89 --- 639200
+  %71 = getelementptr inbounds i8, i8* %0, i64 %70 --- 639200
+  br i1 %8, label %87, label %81 --- 639200
+  br i1 %8, label %126, label %120 --- 639200
+  %131 = icmp eq i8 %130, 0 --- 639200
+  %128 = add nuw nsw i64 %66, %9 --- 639200
+  %70 = add nsw i64 %69, -1 --- 639200
+  %129 = getelementptr inbounds [640000 x i8], [640000 x i8]* %2, i64 0, i64 %128 --- 639200
+  %133 = icmp eq i32 %132, 2 --- 639200
+  br i1 %134, label %136, label %135 --- 639200
+  %144 = add nuw nsw i64 %66, 1 --- 639200
+  br i1 %7, label %118, label %112 --- 639200
+  br i1 %145, label %62, label %65, !llvm.loop !12 --- 639200
+  %68 = icmp eq i64 %66, 799 --- 639200
+  %145 = icmp eq i64 %144, 800 --- 639200
+  %72 = load i8, i8* %71, align 1, !tbaa !5, !range !9 --- 639200
+  br i1 %7, label %78, label %73 --- 639200
+  %69 = add nuw nsw i64 %66, %9 --- 639200
+  %130 = load i8, i8* %129, align 1, !tbaa !5, !range !9 --- 639200
+  %134 = select i1 %131, i1 true, i1 %133 --- 639200
+  %156 = add nuw nsw i64 %155, %149 --- 640000
+  %157 = getelementptr inbounds i8, i8* %0, i64 %156 --- 640000
+  %163 = add nuw nsw i64 %155, 1 --- 640000
+  %164 = icmp eq i64 %163, 800 --- 640000
+  br i1 %164, label %151, label %154, !llvm.loop !15 --- 640000
+  %159 = icmp eq i8 %158, 0 --- 640000
+  %31 = add nuw nsw i64 %29, %24 --- 640000
+  %34 = and i8 %33, 1 --- 640000
+  br i1 %36, label %25, label %28, !llvm.loop !17 --- 640000
+  %33 = trunc i32 %30 to i8 --- 640000
+  %35 = add nuw nsw i64 %29, 1 --- 640000
+  %32 = getelementptr inbounds i8, i8* %1, i64 %31 --- 640000
+  %36 = icmp eq i64 %35, 800 --- 640000
+  %30 = tail call i32 @rand() #6 --- 640000
+  store i8 %34, i8* %32, align 1, !tbaa !15 --- 640000
+  br i1 %159, label %162, label %160 --- 640000
+  %158 = load i8, i8* %157, align 1, !tbaa !5, !range !9 --- 640000
 ```
