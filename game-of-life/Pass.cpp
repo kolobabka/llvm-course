@@ -55,13 +55,7 @@ struct MyPass : public FunctionPass {
           continue;
         }
 
-        SmallVector<char> Buf;
-        raw_svector_ostream OBuf(Buf);
-        I.print(OBuf, true);
-        
-        std::string Str(Buf.begin(), Buf.end());
-
-        Value *InstrLog = builder.CreateGlobalStringPtr(Str.data());
+        Value *InstrLog = builder.CreateGlobalStringPtr(I.getOpcodeName());
         Value *Arg[] = {InstrLog};
         builder.CreateCall(LoggerFunc, Arg);
       }
