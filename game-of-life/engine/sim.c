@@ -64,7 +64,7 @@ int main () {
     if (simInit("Game of Life", Cells))
         return -1;
 
-    isOpenWindow(Cells);
+    while(isOpenWindow(Cells));
 
     destroyWindow();
     return 0;

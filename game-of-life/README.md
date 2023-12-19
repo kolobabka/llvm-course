@@ -1,5 +1,10 @@
 # How to build
 
+To build only the application 
+```
+clang -O2 engine/sim.c engine/app.c -lSDL2 -o GameOfLife
+```
+
 ```
 clang++ -O2 ./Pass.cpp -c -fPIC -I`llvm-config --includedir` -o Pass.o
 clang++ Pass.o -fPIC -shared -o libPass.so
