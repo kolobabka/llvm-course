@@ -19,16 +19,18 @@ void setPixel(int X, int Y, Color Color) {
     SDL_RenderDrawPoint(Win.Renderer, X, Y);
 }
 
-bool isOpenWindow(cell_t *Cells) {
-    SDL_Event Event;
-    if (SDL_PollEvent(&Event) && Event.type == SDL_WINDOWEVENT && Event.window.event == SDL_WINDOWEVENT_CLOSE)
-        return 0;
+void RenderClean() {
     SDL_SetRenderDrawColor(Win.Renderer, 0, 0, 0, 255);
     SDL_RenderClear(Win.Renderer);
-    if (app(Cells) == 0)
-        return 0;
+}
+
+void RenderPresent() {
     SDL_RenderPresent(Win.Renderer);
-    return 1;
+}
+
+bool isOpenWindow() {
+    SDL_Event Event;
+    return !(SDL_PollEvent(&Event) && Event.type == SDL_WINDOWEVENT && Event.window.event == SDL_WINDOWEVENT_CLOSE);
 }
     
 int simInit(const char *Name, cell_t *Cells) {
@@ -64,7 +66,7 @@ int main () {
     if (simInit("Game of Life", Cells))
         return -1;
 
-    while(isOpenWindow(Cells));
+    app(Cells);
 
     destroyWindow();
     return 0;

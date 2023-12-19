@@ -59,32 +59,35 @@ static void drawGameSpace(const cell_t *Cells) {
         for (int J = 0; J < WINDOW_SIZE; J++)
             if (Cells[I * WINDOW_SIZE + J] == 1)
                 setPixel(I, J, cellColor);
+
+    RenderPresent();
 }
 
-int app(cell_t *Cells) {
-    int Unchanged = 0;
-    cell_t CellsCopy[WINDOW_SIZE * WINDOW_SIZE];
-    
-    memcpy(CellsCopy, Cells, WINDOW_SIZE * WINDOW_SIZE);
+void app(cell_t *Cells) {
+    while(isOpenWindow()) {
+        RenderClean();
+        int Unchanged = 0;
+        cell_t CellsCopy[WINDOW_SIZE * WINDOW_SIZE];
+        
+        memcpy(CellsCopy, Cells, WINDOW_SIZE * WINDOW_SIZE);
 
-    for (int I = 0; I < WINDOW_SIZE; I++)
-        for (int J = 0; J < WINDOW_SIZE; J++) {
-            unsigned totalNeighboursAmount = countNeighbours(Cells, I, J);
-            unsigned Pos = I * WINDOW_SIZE + J;
+        for (int I = 0; I < WINDOW_SIZE; I++)
+            for (int J = 0; J < WINDOW_SIZE; J++) {
+                unsigned totalNeighboursAmount = countNeighbours(Cells, I, J);
+                unsigned Pos = I * WINDOW_SIZE + J;
 
-            if ((CellsCopy[Pos] == 1) && (totalNeighboursAmount < 2 || totalNeighboursAmount > 3))
-                CellsCopy[Pos] = 0;
-            else if ((CellsCopy[Pos] == 0) && (totalNeighboursAmount == 3))
-                CellsCopy[Pos] = 1;
-            else
-                Unchanged++;
-        }
+                if ((CellsCopy[Pos] == 1) && (totalNeighboursAmount < 2 || totalNeighboursAmount > 3))
+                    CellsCopy[Pos] = 0;
+                else if ((CellsCopy[Pos] == 0) && (totalNeighboursAmount == 3))
+                    CellsCopy[Pos] = 1;
+                else
+                    Unchanged++;
+            }
 
-    if (Unchanged == WINDOW_SIZE * WINDOW_SIZE)
-	    return 0;
-    
-    memcpy(Cells, CellsCopy, WINDOW_SIZE * WINDOW_SIZE);
-    drawGameSpace(Cells);
-
-    return 1;
+        if (Unchanged == WINDOW_SIZE * WINDOW_SIZE)
+            break;
+        
+        memcpy(Cells, CellsCopy, WINDOW_SIZE * WINDOW_SIZE);
+        drawGameSpace(Cells);
+    }
 }

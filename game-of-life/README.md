@@ -16,21 +16,20 @@ you would get an executable 'GameOfLife' file
 
 # Statistic 
 ```
-bitcast --- 2
-alloca --- 3
+alloca --- 2
 or --- 800
 mul --- 2400
-ret --- 173902
-lshr --- 521697
-store --- 925046
-select --- 1064218
-call --- 1161719
+ret --- 174672
+lshr --- 524004
+store --- 925526
+select --- 1064376
+call --- 1164024
 and --- 1280000
-trunc --- 1510296
+trunc --- 1514141
 zext --- 4471204
-icmp --- 4906625
-load --- 6738209
-getelementptr --- 7030408
-br --- 12750131
-add --- 15053366
+icmp --- 4906781
+load --- 6739745
+getelementptr --- 7030406
+br --- 12751058
+add --- 15052886
 ```

@@ -27,7 +27,10 @@ typedef struct Color {
     unsigned char A;
 } Color;
 
+bool isOpenWindow();
+void RenderClean();
+void RenderPresent();
 void setPixel(int X, int Y, Color Color);
-int app(cell_t *Cells);
+void app(cell_t *Cells);
 
 #endif //__SIM_H__
